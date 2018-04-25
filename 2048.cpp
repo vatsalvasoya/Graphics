@@ -1,7 +1,8 @@
-#include<iostream.h>  d
+#include<iostream.h>
 #include<stdio.h>
 #include<graphics.h>
 #include<conio.h>
+#include"2048_mouse.cpp"
 typedef struct block
 {
 	int val,x,y;
@@ -54,6 +55,8 @@ void main()
 	a[3][2].val=2;
 	a[4][2].val=2;
 	a[5][5].val=2;
+	a[0][5].val=2;
+	a[2][0].val=4;
 
 	draw();
 	settextstyle(DEFAULT_FONT,HORIZ_DIR,2);
@@ -69,130 +72,227 @@ void main()
 			}
 		}
 	}
-
+	while(1)
+	{
 	int key=getch();
 	if(key==0 || key==224)
 	{
-		key=getch()+256;
+	    key=getch()+256;
 	}
 	cleardevice();
-
 	if(key==336)
 	{
-		for(i=5;i>=0;i--)
+	    for(i=5;i>=0;i--)
+	    {
+		for(j=5;j>=0;j--)
 		{
-			for(j=5;j>=0;j--)
+		    if(a[i][j].val!=0)
+		    {
+			if(i==0)
 			{
-				if(a[i][j].val!=0)
+			    for(l=5;l>i;l--)
+			    {
+				if(a[l][j].val==0)
 				{
-					if(i==0)
-					{
-						for(l=5;l>i;l--)
-						{
-							if(a[l][j].val==0)
-							{
-								a[l][j].val=a[i][j].val;
-								a[i][j].val=0;
-								break;
-							}
-						}
-					}
-					else
-					{
-						for(k=i-1;k>=0;k--)
-						{
-							if(a[k][j].val!=0 || k==0)
-							{
-								if(a[i][j].val==a[k][j].val)
-								{
-									a[i][j].val=a[i][j].val+a[k][j].val;
-									a[k][j].val=0;
-								}
-								for(l=5;l>i;l--)
-								{
-									if(a[l][j].val==0)
-									{
-										a[l][j].val=a[i][j].val;
-										a[i][j].val=0;
-										break;
-									}
-								}
-								break;
-							}
-						}
-					}
+				    a[l][j].val=a[i][j].val;
+				    a[i][j].val=0;
+				    break;
 				}
+			    }
 			}
+			else
+			{
+			    for(k=i-1;k>=0;k--)
+			    {
+				if(a[k][j].val!=0 || k==0)
+				{
+				    if(a[i][j].val==a[k][j].val)
+				    {
+					a[i][j].val=a[i][j].val+a[k][j].val;
+					a[k][j].val=0;
+				    }
+				    for(l=5;l>i;l--)
+				    {
+					if(a[l][j].val==0)
+					{
+					    a[l][j].val=a[i][j].val;
+					    a[i][j].val=0;
+					    break;
+					}
+				    }
+				    break;
+				}
+			    }
+			}
+		    }
 		}
+	    }
 	}
-
-
 	if(key==331)
 	{
-		for(i=0;i<6;i++)
-		{
-			for(j=0;j<6;j++)
-			{
-				if(a[i][j].val!=0)
-				{
-					if(j==5)
-					{
-						for(l=0;l<j;l++)
-						{
-							if(a[i][l].val==0)
-							{
-								a[i][l].val=a[i][j].val;
-								a[i][j].val=0;
-								break;
-							}
-						}
-					}
-					else
-					{
-						for(k=j+1;k<6;k++)
-						{
-							if(a[i][k].val!=0 || k==5)
-							{
-								if(a[i][k].val==a[i][j].val)
-								{
-									a[i][j].val=a[i][j].val+a[i][k].val;
-									a[i][k].val=0;
-								}
-								for(l=0;l<j;l++)
-								{
-									if(a[i][l].val==0)
-									{
-										a[i][l].val=a[i][j].val;
-										a[i][j].val=0;
-										break;
-									}
-								}
-								break;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	draw();
-	for(i=0;i<6;i++)
-	{
+	    for(i=0;i<6;i++)
+	    {
 		for(j=0;j<6;j++)
 		{
-			if(a[i][j].val!=0)
+		    if(a[i][j].val!=0)
+		    {
+			if(j==5)
 			{
-				sprintf(c,"%d",a[i][j].val);
-				outtextxy(a[i][j].x,a[i][j].y,c);
-			}
-		}
-	}
-
-
-
-	fflush(stdin);
-	getch();
-	cleardevice();
-	closegraph();
+			    for(l=0;l<j;l++)
+			    {
+				if(a[i][l].val==0)
+				{
+				    a[i][l].val=a[i][j].val;
+				    a[i][j].val=0;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for(k=j+1;k<6;k++)
+                            {
+                                if(a[i][k].val!=0 || k==5)
+                                {
+                                    if(a[i][k].val==a[i][j].val)
+                                    {
+                                        a[i][j].val=a[i][j].val+a[i][k].val;
+                                        a[i][k].val=0;
+                                    }
+                                    for(l=0;l<j;l++)
+                                    {
+                                        if(a[i][l].val==0)
+                                        {
+                                            a[i][l].val=a[i][j].val;
+                                            a[i][j].val=0;
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(key==333)
+        {
+            for(i=0;i<6;i++)
+            {
+                for(j=5;j>=0;j--)
+                {
+                    if(a[i][j].val!=0)
+                    {
+                        if(j==0)
+                        {
+                            for(l=5;l>j;l--)
+                            {
+                                if(a[i][l].val==0)
+                                {
+                                    a[i][l].val=a[i][j].val;
+                                    a[i][j].val=0;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for(k=j-1;k>=0;k--)
+                            {
+                                if(a[i][k].val!=0 || k==0)
+                                {
+                                    if(a[i][k].val==a[i][j].val)
+                                    {
+                                        a[i][j].val=a[i][k].val+a[i][j].val;
+                                        a[i][k].val=0;
+                                    }
+                                    for(l=5;l>j;l--)
+                                    {
+                                        if(a[i][l].val==0)
+                                        {
+                                            a[i][l].val=a[i][j].val;
+                                            a[i][j].val=0;
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(key==328)
+        {
+            for(i=0;i<6;i++)
+            {
+                for(j=0;j<6;j++)
+                {
+                    if(a[i][j].val!=0)
+                    {
+                        if(i==5)
+                        {
+                            for(l=0;l<i;l++)
+                            {
+                                if(a[l][j].val==0)
+                                {
+                                    a[l][j].val=a[i][j].val;
+                                    a[i][j].val=0;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for(k=i+1;k<6;k++)
+                            {
+                                if(a[k][j].val!=0 || k==5)
+                                {
+                                    if(a[k][j].val==a[i][j].val)
+                                    {
+                                        a[i][j].val=a[i][j].val+a[k][j].val;
+                                        a[k][j].val=0;
+                                    }
+                                    for(l=0;l<i;l++)
+                                    {
+                                        if(a[l][j].val==0)
+                                        {
+                                            a[l][j].val=a[i][j].val;
+                                            a[i][j].val=0;
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(key==27)
+        {
+            goto last;
+        }
+        draw();
+        for(i=0;i<6;i++)
+        {
+            for(j=0;j<6;j++)
+            {
+                if(a[i][j].val!=0)
+                {
+                    sprintf(c,"%d",a[i][j].val);
+                    outtextxy(a[i][j].x,a[i][j].y,c);
+                }
+            }
+        }
+        fflush(stdin);
+    }
+    last:
+        getch();
+        cleardevice();
+        closegraph();
 }
 
